@@ -14,7 +14,6 @@
 #include "NVPTX.h"
 #include "NVPTXAliasAnalysis.h"
 #include "NVPTXAsmPrinter.h"
-#include "NVPTXCtorDtorLowering.h"
 #include "NVPTXMachineFunctionInfo.h"
 #include "NVPTXTargetObjectFile.h"
 #include "NVPTXTargetTransformInfo.h"
@@ -202,16 +201,6 @@ void NVPTXTargetMachine::registerEarlyDefaultAliasAnalyses(AAManager &AAM) {
 void NVPTXTargetMachine::registerPassBuilderCallbacks(PassBuilder &PB) {
 #define GET_PASS_REGISTRY "NVPTXPassRegistry.def"
 #include "llvm/Passes/TargetPassRegistry.inc"
-
-  // TODO: Move this into the base CodeGenPassBuilder once all targets that
-  // currently implement it have a ported asm-printer pass.
-  if (PIC) {
-    PIC->addClassToPassName(NVPTXAsmPrinterBeginPass::name(),
-                            "nvptx-asm-printer-begin");
-    PIC->addClassToPassName(NVPTXAsmPrinterPass::name(), "nvptx-asm-printer");
-    PIC->addClassToPassName(NVPTXAsmPrinterEndPass::name(),
-                            "nvptx-asm-printer-end");
-  }
 
   PB.registerPipelineStartEPCallback(
       [this](ModulePassManager &PM, OptimizationLevel Level) {

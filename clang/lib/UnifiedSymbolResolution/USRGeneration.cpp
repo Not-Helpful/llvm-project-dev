@@ -1153,9 +1153,26 @@ void USRGenerator::VisitTemplateArgument(const TemplateArgument &Arg) {
     VisitTemplateName(Arg.getAsTemplateOrTemplatePattern());
     break;
 
-  case TemplateArgument::Expression:
-    // FIXME: Visit expressions.
+  case TemplateArgument::Expression: {
+    const clang::Expr *E = Arg.getAsExpr();
+
+    if (const auto *LE = dyn_cast<clang::LambdaExpr>(E)) {
+      const clang::CXXRecordDecl *LambdaClass = LE->getLambdaClass();
+      unsigned ManglingNumber = LambdaClass->getLambdaManglingNumber();
+      Out << ManglingNumber;
+    } else if (E->isValueDependent()) {
+      E->printPretty(Out, nullptr, Context.getPrintingPolicy());
+    } else {
+      clang::APValue Value;
+      if (E->EvaluateAsRValue(Value, Context)) {
+        E->printPretty(Out, nullptr, Context.getPrintingPolicy());
+      } else {
+        E->printPretty(Out, nullptr, Context.getPrintingPolicy());
+      }
+    }
+
     break;
+  }
 
   case TemplateArgument::Pack:
     Out << 'p' << Arg.pack_size();

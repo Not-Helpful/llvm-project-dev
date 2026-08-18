@@ -13,6 +13,7 @@
 #include "clang/AST/DeclTemplate.h"
 #include "clang/AST/DeclVisitor.h"
 #include "clang/AST/ODRHash.h"
+#include "clang/AST/ExprCXX.h"
 #include "clang/Lex/PreprocessingRecord.h"
 #include "llvm/Support/Path.h"
 #include "llvm/Support/raw_ostream.h"
@@ -1161,13 +1162,13 @@ void USRGenerator::VisitTemplateArgument(const TemplateArgument &Arg) {
       unsigned ManglingNumber = LambdaClass->getLambdaManglingNumber();
       Out << ManglingNumber;
     } else if (E->isValueDependent()) {
-      E->printPretty(Out, nullptr, Context.getPrintingPolicy());
+      E->printPretty(Out, nullptr, Context->getPrintingPolicy());
     } else {
-      clang::APValue Value;
-      if (E->EvaluateAsRValue(Value, Context)) {
-        E->printPretty(Out, nullptr, Context.getPrintingPolicy());
+      clang::Expr::EvalResult Value;
+      if (E->EvaluateAsRValue(Value, *Context)) {
+        E->printPretty(Out, nullptr, Context->getPrintingPolicy());
       } else {
-        E->printPretty(Out, nullptr, Context.getPrintingPolicy());
+        E->printPretty(Out, nullptr, Context->getPrintingPolicy());
       }
     }
 

@@ -13,6 +13,7 @@
 #include "clang/AST/DeclTemplate.h"
 #include "clang/AST/DeclVisitor.h"
 #include "clang/AST/ODRHash.h"
+#include "clang/AST/ExprCXX.h"
 #include "clang/Lex/PreprocessingRecord.h"
 #include "llvm/Support/Path.h"
 #include "llvm/Support/raw_ostream.h"
@@ -1153,9 +1154,26 @@ void USRGenerator::VisitTemplateArgument(const TemplateArgument &Arg) {
     VisitTemplateName(Arg.getAsTemplateOrTemplatePattern());
     break;
 
-  case TemplateArgument::Expression:
-    // FIXME: Visit expressions.
+  case TemplateArgument::Expression: {
+    const clang::Expr *E = Arg.getAsExpr();
+
+    if (const auto *LE = dyn_cast<clang::LambdaExpr>(E)) {
+      const clang::CXXRecordDecl *LambdaClass = LE->getLambdaClass();
+      unsigned ManglingNumber = LambdaClass->getLambdaManglingNumber();
+      Out << ManglingNumber;
+    } else if (E->isValueDependent()) {
+      E->printPretty(Out, nullptr, Context->getPrintingPolicy());
+    } else {
+      clang::Expr::EvalResult Value;
+      if (E->EvaluateAsRValue(Value, *Context)) {
+        E->printPretty(Out, nullptr, Context->getPrintingPolicy());
+      } else {
+        E->printPretty(Out, nullptr, Context->getPrintingPolicy());
+      }
+    }
+
     break;
+  }
 
   case TemplateArgument::Pack:
     Out << 'p' << Arg.pack_size();

@@ -1,3 +1,4 @@
+use.hs llvm default
 VERSION=USR-patch
 BUILD=./build/${VERSION}
 
@@ -26,3 +27,5 @@ echo "-I/home/helpful/.installs/llvm/${VERSION}/lib/clang/23
 -Wl,-rpath,/home/helpful/.installs/llvm/${VERSION}/lib
 -Wl,-rpath,/home/helpful/.installs/llvm/${VERSION}/lib/x86_64-unknown-linux-gnu" \
      > $INSTALLS/llvm/${VERSION}/bin/clang.cfg
+
+use.hs llvm USR-patch 

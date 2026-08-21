@@ -249,6 +249,7 @@ void USRGenerator::VisitFieldDecl(const FieldDecl *D) {
 }
 
 void USRGenerator::VisitFunctionDecl(const FunctionDecl *D) {
+  printf("Entering VisitFunctionDecl\n");
   if (ShouldGenerateLocation(D) && GenLoc(D, /*IncludeOffset=*/isLocal(D)))
     return;
 
@@ -1136,62 +1137,79 @@ void USRGenerator::VisitTemplateName(TemplateName Name) {
 }
 
 void USRGenerator::VisitTemplateArgument(const TemplateArgument &Arg) {
+    printf("Implement me!\n");
   switch (Arg.getKind()) {
   case TemplateArgument::Null:
+    printf("Null!\n");
     break;
 
   case TemplateArgument::Declaration:
+    printf("Declaration!\n");
     Visit(Arg.getAsDecl());
     break;
 
   case TemplateArgument::NullPtr:
+    printf("NullPtr!\n");
     break;
 
   case TemplateArgument::TemplateExpansion:
+    printf("TemplateExpansion!\n");
     Out << 'P'; // pack expansion of...
     [[fallthrough]];
+
   case TemplateArgument::Template:
+    printf("Template!\n");
     VisitTemplateName(Arg.getAsTemplateOrTemplatePattern());
     break;
 
   case TemplateArgument::Expression: {
-    const clang::Expr *E = Arg.getAsExpr();
+    printf("Expression!\n");
+    // printf("#########################\n");
+    // llvm::errs() << "###########################################" << "\n";
+    // const clang::Expr *E = Arg.getAsExpr();
 
-    if (const auto *LE = dyn_cast<clang::LambdaExpr>(E)) {
-      const clang::CXXRecordDecl *LambdaClass = LE->getLambdaClass();
-      unsigned ManglingNumber = LambdaClass->getLambdaManglingNumber();
-      Out << ManglingNumber;
-    } else if (E->isValueDependent()) {
-      E->printPretty(Out, nullptr, Context->getPrintingPolicy());
-    } else {
-      clang::Expr::EvalResult Value;
-      if (E->EvaluateAsRValue(Value, *Context)) {
-        E->printPretty(Out, nullptr, Context->getPrintingPolicy());
-      } else {
-        E->printPretty(Out, nullptr, Context->getPrintingPolicy());
-      }
-    }
-
+    // if (const auto *LE = dyn_cast<clang::LambdaExpr>(E)) {
+    //   const clang::CXXRecordDecl *LambdaClass = LE->getLambdaClass();
+    //   unsigned ManglingNumber = LambdaClass->getLambdaManglingNumber();
+    //   Out << ManglingNumber;
+    //   llvm::errs() << ManglingNumber << "\n";
+    // } else if (E->isValueDependent()) {
+    //   E->printPretty(Out, nullptr, Context->getPrintingPolicy());
+    //   E->printPretty(llvm::errs(), nullptr, Context->getPrintingPolicy());
+    // } else {
+    //   clang::Expr::EvalResult Value;
+    //   if (E->EvaluateAsRValue(Value, *Context)) {
+    //     E->printPretty(Out, nullptr, Context->getPrintingPolicy());
+    //     E->printPretty(llvm::errs(), nullptr, Context->getPrintingPolicy());
+    //   } else {
+    //     E->printPretty(Out, nullptr, Context->getPrintingPolicy());
+    //     E->printPretty(llvm::errs(), nullptr, Context->getPrintingPolicy());
+    //   }
+    // }
     break;
   }
 
   case TemplateArgument::Pack:
+    printf("Pack!\n");
     Out << 'p' << Arg.pack_size();
     for (const auto &P : Arg.pack_elements())
       VisitTemplateArgument(P);
     break;
 
   case TemplateArgument::Type:
+    printf("Type!\n");
     VisitType(Arg.getAsType());
     break;
 
   case TemplateArgument::Integral:
+    printf("Integral!\n");
     Out << 'V';
     VisitType(Arg.getIntegralType());
     Out << Arg.getAsIntegral();
     break;
 
   case TemplateArgument::StructuralValue: {
+    printf("StructuralValue!\n");
     Out << 'S';
     VisitType(Arg.getStructuralValueType());
     ODRHash Hash{};

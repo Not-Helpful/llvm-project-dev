@@ -1,1 +1,2 @@
-clang -Xclang -ast-dump ./suspects/USR-patch-test.cpp 
+clang++ ./suspects/USR-patch-test.cpp --std=c++20 -fsyntax-only 
+clang++ --version

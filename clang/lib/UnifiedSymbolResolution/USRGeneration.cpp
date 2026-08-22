@@ -249,7 +249,6 @@ void USRGenerator::VisitFieldDecl(const FieldDecl *D) {
 }
 
 void USRGenerator::VisitFunctionDecl(const FunctionDecl *D) {
-  printf("Entering VisitFunctionDecl\n");
   if (ShouldGenerateLocation(D) && GenLoc(D, /*IncludeOffset=*/isLocal(D)))
     return;
 
@@ -1137,7 +1136,6 @@ void USRGenerator::VisitTemplateName(TemplateName Name) {
 }
 
 void USRGenerator::VisitTemplateArgument(const TemplateArgument &Arg) {
-    printf("Implement me!\n");
   switch (Arg.getKind()) {
   case TemplateArgument::Null:
     printf("Null!\n");

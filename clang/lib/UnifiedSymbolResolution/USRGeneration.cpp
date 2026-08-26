@@ -1138,30 +1138,24 @@ void USRGenerator::VisitTemplateName(TemplateName Name) {
 void USRGenerator::VisitTemplateArgument(const TemplateArgument &Arg) {
   switch (Arg.getKind()) {
   case TemplateArgument::Null:
-    printf("Null!\n");
     break;
 
   case TemplateArgument::Declaration:
-    printf("Declaration!\n");
     Visit(Arg.getAsDecl());
     break;
 
   case TemplateArgument::NullPtr:
-    printf("NullPtr!\n");
     break;
 
   case TemplateArgument::TemplateExpansion:
-    printf("TemplateExpansion!\n");
     Out << 'P'; // pack expansion of...
     [[fallthrough]];
 
   case TemplateArgument::Template:
-    printf("Template!\n");
     VisitTemplateName(Arg.getAsTemplateOrTemplatePattern());
     break;
 
   case TemplateArgument::Expression: {
-    printf("Expression!\n");
     // printf("#########################\n");
     // llvm::errs() << "###########################################" << "\n";
     // const clang::Expr *E = Arg.getAsExpr();
@@ -1188,26 +1182,22 @@ void USRGenerator::VisitTemplateArgument(const TemplateArgument &Arg) {
   }
 
   case TemplateArgument::Pack:
-    printf("Pack!\n");
     Out << 'p' << Arg.pack_size();
     for (const auto &P : Arg.pack_elements())
       VisitTemplateArgument(P);
     break;
 
   case TemplateArgument::Type:
-    printf("Type!\n");
     VisitType(Arg.getAsType());
     break;
 
   case TemplateArgument::Integral:
-    printf("Integral!\n");
     Out << 'V';
     VisitType(Arg.getIntegralType());
     Out << Arg.getAsIntegral();
     break;
 
   case TemplateArgument::StructuralValue: {
-    printf("StructuralValue!\n");
     Out << 'S';
     VisitType(Arg.getStructuralValueType());
     ODRHash Hash{};

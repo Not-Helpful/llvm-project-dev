@@ -1156,28 +1156,6 @@ void USRGenerator::VisitTemplateArgument(const TemplateArgument &Arg) {
     break;
 
   case TemplateArgument::Expression: {
-    // printf("#########################\n");
-    // llvm::errs() << "###########################################" << "\n";
-    // const clang::Expr *E = Arg.getAsExpr();
-
-    // if (const auto *LE = dyn_cast<clang::LambdaExpr>(E)) {
-    //   const clang::CXXRecordDecl *LambdaClass = LE->getLambdaClass();
-    //   unsigned ManglingNumber = LambdaClass->getLambdaManglingNumber();
-    //   Out << ManglingNumber;
-    //   llvm::errs() << ManglingNumber << "\n";
-    // } else if (E->isValueDependent()) {
-    //   E->printPretty(Out, nullptr, Context->getPrintingPolicy());
-    //   E->printPretty(llvm::errs(), nullptr, Context->getPrintingPolicy());
-    // } else {
-    //   clang::Expr::EvalResult Value;
-    //   if (E->EvaluateAsRValue(Value, *Context)) {
-    //     E->printPretty(Out, nullptr, Context->getPrintingPolicy());
-    //     E->printPretty(llvm::errs(), nullptr, Context->getPrintingPolicy());
-    //   } else {
-    //     E->printPretty(Out, nullptr, Context->getPrintingPolicy());
-    //     E->printPretty(llvm::errs(), nullptr, Context->getPrintingPolicy());
-    //   }
-    // }
     break;
   }
 

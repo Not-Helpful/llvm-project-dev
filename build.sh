@@ -1,4 +1,4 @@
-use.hs llvm default
+use.hs llvm full_build
 VERSION=24
 BUILD=./build/${VERSION}
 

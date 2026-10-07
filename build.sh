@@ -6,7 +6,7 @@ if [ ! -f "$BUILD/build.ninja" ]; then
     cmake -S ./llvm -B "$BUILD" -G Ninja \
           -DCMAKE_INSTALL_PREFIX="$INSTALLS/llvm/${VERSION}" \
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-          -DLLVM_ENABLE_PROJECTS="clang" \
+          -DLLVM_ENABLE_PROJECTS="clang;llvm;" \
           -DCMAKE_BUILD_TYPE="RelWithDebInfo" \
           -DBUILD_SHARED_LIBS=ON \
           -DLLVM_ENABLE_PLUGINS=ON \

@@ -19,15 +19,3 @@ ninja
 ninja install
 cd ../../
 
-echo "-I/home/helpful/.installs/llvm/${VERSION}/lib/clang/23
--I/home/helpful/.installs/llvm/${VERSION}/include/
--Wl,-rpath,/home/helpful/.installs/llvm/${VERSION}/lib
--Wl,-rpath,/home/helpful/.installs/llvm/${VERSION}/lib/x86_64-unknown-linux-gnu" \
-     > $INSTALLS/llvm/${VERSION}/bin/clang++.cfg
-
-echo "-I/home/helpful/.installs/llvm/${VERSION}/lib/clang/23
--I/home/helpful/.installs/llvm/${VERSION}/include/
--Wl,-rpath,/home/helpful/.installs/llvm/${VERSION}/lib
--Wl,-rpath,/home/helpful/.installs/llvm/${VERSION}/lib/x86_64-unknown-linux-gnu" \
-     > $INSTALLS/llvm/${VERSION}/bin/clang.cfg
-
